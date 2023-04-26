@@ -12,6 +12,19 @@ $file = array_map('str_getcsv', $file);
 // remove a primeira linha do arquivo (Cabeçalho)
 array_shift($file);
 
+// inicia o gerador de PDF
+$mpdf = new \Mpdf\Mpdf([
+	'margin_top' => 2,
+	'margin_left' => 2,
+	'margin_right' => 2,
+	'margin_bottom' => 2,
+	// 'format' => 'A4'
+	'format' => 'A3'
+]);
+// estipula o quantidade de colunas desejadas
+$mpdf-> SetColumns(3);
+// $mpdf->SetColumns(2);
+
 $html = '';
 
 // funcao para abreviar os nomes
@@ -43,6 +56,7 @@ function abreviarNome($name) {
 	return $name;
 }
 
+$counter = 1;
 // processa cada uma das linhas do arquivo
 foreach ($file as $name) {
 	// cria o codigo HTML de cada linha
@@ -50,20 +64,12 @@ foreach ($file as $name) {
 		<p style="margin-top:-90px;margin-left: 20px;font-family:arial;padding-bottom:18px;
 		font-weight:bold;color:firebrick;font-size:14px">' . abreviarNome($name[0]) . '</p>
 		<br/><br/>';
+
 }
 
-// inicia o gerador de PDF
-$mpdf = new \Mpdf\Mpdf([
-	'margin_top' => 2,
-	'margin_left' => 2,
-	'margin_right' => 2,
-	'margin_bottom' => 2,
-	'format' => 'A3'
-]);
-// estipula o quantidade de colunas desejadas
-$mpdf->SetColumns(3);
 // coloca o HTML dentro do gerador de PDF
 $mpdf->WriteHTML($html);
+
 // da uma nome para o arquivo e gera o pdf
 // 'I' = exibir	no navegador	'D'= faz o download automaticamente
 $mpdf->Output('Certificados', 'I');
